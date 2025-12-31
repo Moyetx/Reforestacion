@@ -55,7 +55,7 @@ def ejecutar_ag(area_ha, altitud, temp, prec, pendiente):
         scores = np.array([fitness_function(n, temp, prec, altitud) for n in poblacion])
         
         # Inicialización de lista vacía corregida
-        nueva_poblacion =
+        nueva_poblacion = []
         
         # Elitismo: Preservar al mejor individuo [3]
         mejor_actual = poblacion[np.argmax(scores)]
@@ -121,3 +121,4 @@ if run_ag:
     st.write("**Nota Biológica:** La densidad se ajusta automáticamente para maximizar la supervivencia del *Pinus hartwegii* ante heladas y estrés hídrico.")
 else:
     st.info("Ajuste los valores en la barra lateral y presione 'Ejecutar' para ver la recomendación técnica.")
+
