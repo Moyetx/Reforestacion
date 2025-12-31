@@ -10,27 +10,27 @@ st.set_page_config(page_title="AI-Refores CDMX", page_icon="🌲", layout="wide"
 ESPECIES = {
     "Pinus hartwegii (Pino de altura)": {
         "ln_alpha": 12.31, "beta": -1.605, "alt_range": (3000, 4200),
-        "img": "especies/hartwegii.jpg",
+        "img": "images/hartwegii.jpg",
         "desc": "Especie de alta montaña, adaptada a heladas extremas. Marca el límite arbóreo alpino."
     },
     "Pinus pseudostrobus (Pino lacio)": {
         "ln_alpha": 11.85, "beta": -1.540, "alt_range": (1600, 3200),
-        "img": "especies/pseudostrobus.jpg",
+        "img": "images/pinolacio.jpg",
         "desc": "Pino de rápido crecimiento, requiere buena humedad. Valorado por su madera lacia."
     },
     "Pinus montezumae (Ocote)": {
         "ln_alpha": 12.01, "beta": -1.605, "alt_range": (2400, 3000),
-        "img": "especies/montezumae.jpg",
+        "img": "images/pino-moctezuma.jpg",
         "desc": "Especie productiva de gran valor maderero en suelos volcánicos profundos."
     },
     "Pinus teocote (Ocote chino)": {
         "ln_alpha": 11.57, "beta": -1.535, "alt_range": (1500, 3000),
-        "img": "especies/teocote.jpg",
+        "img": "images/pinus-teocote.jpg",
         "desc": "Muy rústico, ideal para sitios degradados, laderas erosionadas o con poca lluvia."
     },
     "Pinus leiophylla (Chimonque)": {
         "ln_alpha": 11.60, "beta": -1.580, "alt_range": (1600, 3000),
-        "img": "especies/leiophylla.jpg",
+        "img": "images/leiophylla04.jpg",
         "desc": "Resistente a incendios y contaminación urbana; una de las pocas coníferas que rebrota."
     }
 }
@@ -58,7 +58,7 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, sp_name):
     poblacion = np.random.uniform(400, 2500, 100)
     for _ in range(40):
         scores = np.array([fitness_function(n, temp, prec, alt, sp_data) for n in poblacion])
-        nueva_poblacion = # FIX: Lista vacía correctamente inicializada
+        nueva_poblacion = []
         nueva_poblacion.append(poblacion[np.argmax(scores)])
         while len(nueva_poblacion) < 100:
             p1 = np.random.choice(poblacion, p=scores/np.sum(scores))
@@ -80,7 +80,7 @@ st.title("🌲 AI-Refores: Optimización de Densidad con Visualización")
 st.markdown("Determinación de densidad óptima para el **Suelo de Conservación (CDMX)**.")
 
 with st.sidebar:
-    st.header("📋 Parámetros de Selección")
+    st.header("Parámetros de Selección")
     especie_sel = st.selectbox("Especie de Pino", list(ESPECIES.keys()))
     
     # Mostrar imagen de la especie en el sidebar si existe
@@ -97,7 +97,7 @@ with st.sidebar:
     t_in = st.slider("Temp. Media Anual (°C)", 5, 25, 12)
     p_in = st.slider("Precipitación Anual (mm)", 400, 2000, 1100)
     slope_in = st.slider("Pendiente (%)", 0, 60, 10)
-    run = st.button("🚀 Optimizar Plantación")
+    run = st.button(" Optimizar Plantación")
 
 if run:
     n, t, m = ejecutar_ag(area_in, alt_in, t_in, p_in, slope_in, especie_sel)
@@ -115,3 +115,4 @@ if run:
     st.info(f"Distancia recomendada: ~{distancia:.2f} metros entre ejemplares.")
 else:
     st.info("Ajuste los valores a la izquierda para iniciar la evolución genética.")
+
