@@ -48,7 +48,7 @@ def ejecutar_ag(area_ha, altitud, temp, prec, pendiente):
     
     for _ in range(generaciones):
         scores = np.array([fitness_function(n, temp, prec, altitud) for n in poblacion])
-        nueva_poblacion =
+        nueva_poblacion = []
         
         # Elitismo: Guardar el mejor
         nueva_poblacion.append(poblacion[np.argmax(scores)])
