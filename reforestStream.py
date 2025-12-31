@@ -55,7 +55,7 @@ def ejecutar_ag(area_ha, altitud, temp, prec, pendiente):
         scores = np.array([fitness_function(n, temp, prec, altitud) for n in poblacion])
         
         # FIX: Inicialización correcta de la lista
-        nueva_poblacion =
+        nueva_poblacion = []
         
         # Elitismo: Mantener al mejor individuo [3]
         mejor_actual = poblacion[np.argmax(scores)]
