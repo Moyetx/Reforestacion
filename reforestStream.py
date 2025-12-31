@@ -70,7 +70,7 @@ def seleccion_ruleta_manual(poblacion, scores):
     # Probabilidades de selección
     p_s = [s / fitness_total for s in scores]
     # Probabilidad acumulada
-    p_acumulada =
+    p_acumulada =[]
     ac = 0
     for p in p_s:
         ac += p
@@ -89,7 +89,7 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, sp_key):
     
     for _ in range(40):
         scores = np.array([fitness_function(n, temp, prec, alt, sp_data) for n in poblacion])
-        nueva_poblacion =
+        nueva_poblacion = []
         
         # Elitismo: Mantener al mejor de la generación anterior [6]
         nueva_poblacion.append(poblacion[np.argmax(scores)]) 
@@ -157,4 +157,5 @@ if run_btn:
     st.info(f"Distancia recomendada: ~{distancia:.2f} metros entre ejemplares.")
 else:
     st.info("Selecciona una especie y ajusta los parámetros para iniciar.")
+
 
