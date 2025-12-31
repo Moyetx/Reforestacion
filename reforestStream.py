@@ -63,7 +63,7 @@ def fitness_function(N, temp, prec, altitud, sp_data):
         score -= diff * 0.1
     return max(0.0001, score)
 
-# --- RULETA SOLICITADA POR EL USUARIO ---
+# RULETA
 def seleccion_ruleta_manual(poblacion, scores):
     """Implementación manual de ruleta por probabilidad acumulada """
     fitness_total = sum(scores)
@@ -95,7 +95,7 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, sp_key):
         nueva_poblacion.append(poblacion[np.argmax(scores)]) 
         
         while len(nueva_poblacion) < pop_size:
-            # Uso de la ruleta manual solicitada
+            # Uso de la ruleta manual
             p1 = seleccion_ruleta_manual(poblacion, scores)
             p2 = seleccion_ruleta_manual(poblacion, scores)
             # Cruza aritmética y Mutación +/- 5%
@@ -157,3 +157,4 @@ if run_btn:
     st.info(f"Distancia recomendada: ~{distancia:.2f} metros entre ejemplares.")
 else:
     st.info("Selecciona una especie y ajusta los parámetros para iniciar.")
+
