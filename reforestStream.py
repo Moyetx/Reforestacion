@@ -18,25 +18,25 @@ ESPECIES = {
     "P. pseudostrobus": {
         "full_name": "Pinus pseudostrobus (Pino lacio)",
         "ln_alpha": 11.85, "beta": -1.540, "alt_range": (1600, 3200),
-        "img": "images/pseudostrobus.jpg",
+        "img": "images/pinolacio.jpg",
         "desc": "Pino de rápido crecimiento, requiere alta humedad relativa."
     },
     "P. montezumae": {
         "full_name": "Pinus montezumae (Ocote)",
         "ln_alpha": 12.01, "beta": -1.605, "alt_range": (2400, 3000),
-        "img": "images/montezumae.jpg",
+        "img": "images/pino-moctezuma.jpg",
         "desc": "Especie productiva de gran valor maderero en suelos volcánicos."
     },
     "P. teocote": {
         "full_name": "Pinus teocote (Ocote chino)",
         "ln_alpha": 11.57, "beta": -1.535, "alt_range": (1500, 3000),
-        "img": "images/teocote.jpg",
+        "img": "images/pinus-teocote.jpg",
         "desc": "Especie rústica, ideal para sitios degradados o con poca lluvia."
     },
     "P. leiophylla": {
         "full_name": "Pinus leiophylla (Chimonque)",
         "ln_alpha": 11.60, "beta": -1.580, "alt_range": (1600, 3000),
-        "img": "images/leiophylla.jpg",
+        "img": "images/leiophylla04.jpg",
         "desc": "Resistente a incendios y contaminación; puede rebrotar tras el fuego."
     }
 }
@@ -157,5 +157,6 @@ if run_btn:
     st.info(f"Distancia recomendada: ~{distancia:.2f} metros entre ejemplares.")
 else:
     st.info("Selecciona una especie y ajusta los parámetros para iniciar.")
+
 
 
