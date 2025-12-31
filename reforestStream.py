@@ -4,107 +4,114 @@ import numpy as np
 # --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(page_title="AI-Refores CDMX", page_icon="🌲", layout="wide")
 
-# --- PARÁMETROS BIOMÉTRICOS (Pinus hartwegii) ---
-LN_ALPHA = 12.01457   # Intercepto de Reineke para coníferas mexicanas 
-BETA = -1.605         # Pendiente universal de autoaclareo 
-D_REF = 25.0          # Diámetro de referencia estándar (cm)
+# --- BASE DE DATOS DE ESPECIES ---
+# Parámetros calibrados para el centro de México 
+ESPECIES = {
+    "Pinus hartwegii (Pino de altura)": {
+        "ln_alpha": 12.31, "beta": -1.605, "alt_range": (3000, 4200),
+        "desc": "Especie de alta montaña, adaptada a heladas frecuentes."
+    },
+    "Pinus pseudostrobus (Pino lacio)": {
+        "ln_alpha": 11.85, "beta": -1.540, "alt_range": (1600, 3200),
+        "desc": "Pino de rápido crecimiento, requiere buena humedad relativa."
+    },
+    "Pinus montezumae (Ocote)": {
+        "ln_alpha": 12.01, "beta": -1.605, "alt_range": (2400, 3000),
+        "desc": "Especie productiva de gran valor maderero en suelos volcánicos."
+    },
+    "Pinus teocote (Ocote chino)": {
+        "ln_alpha": 11.57, "beta": -1.535, "alt_range": (1500, 3000),
+        "desc": "Muy rústico, ideal para sitios degradados o con poca lluvia."
+    },
+    "Pinus leiophylla (Chimonque)": {
+        "ln_alpha": 11.60, "beta": -1.580, "alt_range": (1600, 3000),
+        "desc": "Resistente a incendios y contaminación urbana; puede rebrotar."
+    }
+}
 
-def calcular_idr_max_base():
-    """Capacidad de carga máxima teórica absoluta"""
-    return np.exp(LN_ALPHA + BETA * np.log(D_REF))
-
-def fitness_function(N, temp_media, prec_anual, altitud):
-    """Evalúa la aptitud biológica basada en clima y densidad relativa"""
+def fitness_function(N, temp, prec, altitud, sp_data):
     # 1. Ajuste Climático (Índice AHM)
-    ahm = (temp_media + 10) / (prec_anual / 1000)
-    factor_clima = max(0.2, 1 - (ahm / 60)) 
+    ahm = (temp + 10) / (prec / 1000)
+    factor_clima = max(0.2, 1 - (ahm / 65)) 
     
-    # 2. Capacidad de carga del sitio ajustada por clima
-    idr_max_sitio = calcular_idr_max_base() * factor_clima
-    dr = N / idr_max_sitio # Densidad Relativa
+    # 2. Capacidad de Carga Específica
+    idr_max = np.exp(sp_data["ln_alpha"] + sp_data["beta"] * np.log(25)) * factor_clima
+    dr = N / idr_max # Densidad Relativa
     
-    # 3. Lógica de Puntuación: Regla del 35-65% 
+    # 3. Puntuación (Ventana de Oro 35-65%) 
     if 0.35 <= dr <= 0.65:
-        score = 100  # Zona óptima de crecimiento
+        score = 100
     elif dr < 0.35:
-        score = 100 * (dr / 0.35)  # Penaliza subutilización
+        score = 100 * (dr / 0.35)
     else:
-        score = 100 * np.exp(-5 * (dr - 0.65)) # Penaliza riesgo de mortalidad
+        score = 100 * np.exp(-5 * (dr - 0.65))
         
-    # 4. Restricción por Altitud extrema (>4000m)
-    if altitud > 4000:
-        score -= (altitud - 4000) * 1.5
+    # 4. Penalización Altitudinal Fuera de Rango
+    min_alt, max_alt = sp_data["alt_range"]
+    if altitud < min_alt or altitud > max_alt:
+        diff = min(abs(altitud - min_alt), abs(altitud - max_alt))
+        score -= diff * 0.1
         
     return max(0.0001, score)
 
-def seleccion_ruleta(poblacion, scores):
-    probabilidades = scores / np.sum(scores)
-    return np.random.choice(poblacion, p=probabilidades)
-
-def ejecutar_ag(area_ha, altitud, temp, prec, pendiente):
-    pop_size = 100
-    generaciones = 40
-    poblacion = np.random.uniform(400, 2500, pop_size)
+def ejecutar_ag(area_ha, alt, temp, prec, pendiente, sp_name):
+    sp_data = ESPECIES[sp_name]
+    poblacion = np.random.uniform(400, 2500, 100) # 
     
-    for _ in range(generaciones):
-        scores = np.array([fitness_function(n, temp, prec, altitud) for n in poblacion])
-        nueva_poblacion = []
+    for _ in range(40):
+        scores = np.array([fitness_function(n, temp, prec, alt, sp_data) for n in poblacion])
+        nueva_poblacion = # CORRECCIÓN: Inicialización de lista
         
-        # Elitismo: Mantener al mejor
+        # Elitismo
         nueva_poblacion.append(poblacion[np.argmax(scores)])
         
-        while len(nueva_poblacion) < pop_size:
-            p1 = seleccion_ruleta(poblacion, scores)
-            p2 = seleccion_ruleta(poblacion, scores)
-            hijo = (p1 + p2) / 2 # Cruza aritmética
-            hijo *= np.random.uniform(0.95, 1.05) # Mutación +/- 5%
+        while len(nueva_poblacion) < 100:
+            p1 = np.random.choice(poblacion, p=scores/np.sum(scores))
+            p2 = np.random.choice(poblacion, p=scores/np.sum(scores))
+            hijo = (p1 + p2) / 2
+            hijo *= np.random.uniform(0.95, 1.05) # Mutación
             nueva_poblacion.append(hijo)
-            
         poblacion = np.array(nueva_poblacion)
 
-    final_scores = np.array([fitness_function(n, temp, prec, altitud) for n in poblacion])
-    n_ha_final = float(poblacion[np.argmax(final_scores)]) 
+    n_ha = float(poblacion[np.argmax(scores)])
     
+    # Ajuste por Diseño 
     if pendiente > 5:
-        diseno = "Tres Bolillo (Triangulación)"
-        n_final_diseno = n_ha_final * 1.155 # +15.5% de densidad 
+        metodo = "Tres Bolillo (Triangulación)"
+        total = int(n_ha * 1.155 * area_ha)
     else:
-        diseno = "Marco Real (Cuadrícula)"
-        n_final_diseno = n_ha_final
+        metodo = "Marco Real (Cuadrícula)"
+        total = int(n_ha * area_ha)
         
-    total_arboles = int(n_final_diseno * area_ha)
-    return n_ha_final, total_arboles, diseno
+    return n_ha, total, metodo
 
 # --- INTERFAZ STREAMLIT ---
-st.title("🌲 AI-Refores: Optimización de Reforestación")
-st.markdown("Cálculo de densidad ideal para **Suelo de Conservación (CDMX)** basado en algoritmos genéticos.")
+st.title("🌲 AI-Refores: Optimización Inteligente de Reforestación")
+st.markdown("Determinación de densidad óptima para el **Suelo de Conservación de la CDMX**.")
 
 with st.sidebar:
-    st.header("⚙️ Parámetros de Entrada")
-    area_in = st.number_input("Extensión del terreno (Hectáreas)", 0.1, 500.0, 10.0)
-    alt_in = st.slider("Altitud (msnm)", 2500, 4300, 3850)
-    t_in = st.slider("Temp. Media Anual (°C)", 5, 22, 11)
-    p_in = st.slider("Precipitación Anual (mm)", 400, 2000, 1200)
-    slope_in = st.slider("Pendiente (%)", 0, 45, 12)
-    run_ag = st.button("🚀 Ejecutar Algoritmo Genético")
+    st.header("📋 Selección de Parámetros")
+    especie = st.selectbox("Especie de Pino", list(ESPECIES.keys()))
+    st.caption(ESPECIES[especie]["desc"])
+    area_in = st.number_input("Extensión (Hectáreas)", 0.1, 500.0, 10.0)
+    alt_in = st.slider("Altitud (msnm)", 1500, 4300, 3000)
+    t_in = st.slider("Temp. Media Anual (°C)", 5, 25, 12)
+    p_in = st.slider("Precipitación Anual (mm)", 400, 2000, 1100)
+    slope_in = st.slider("Pendiente (%)", 0, 60, 10)
+    run = st.button("🚀 Optimizar Plantación")
 
-if run_ag:
-    n_ha, total, metodo = ejecutar_ag(area_in, alt_in, t_in, p_in, slope_in)
+if run:
+    n, t, m = ejecutar_ag(area_in, alt_in, t_in, p_in, slope_in, especie)
+    st.success("¡Optimización de Especie Completada!")
     
-    st.success("¡Optimización Completada!")
-    
-    # NUEVO LAYOUT: Metrics arriba, Diseño Sugerido abajo
     col1, col2 = st.columns(2)
-    col1.metric("Densidad por Hectárea", f"{n_ha:.2f} árb/ha")
-    col2.metric("Total de Árboles a Plantar", f"{total:,}")
+    col1.metric("Densidad Biológica", f"{n:.2f} árb/ha")
+    col2.metric("Total Árboles a Plantar", f"{t:,}")
     
     st.divider()
-    st.metric("Diseño Sugerido (por pendiente)", metodo)
+    st.metric("Diseño Sugerido (por pendiente)", m)
     
-    distancia = np.sqrt(10000 / n_ha)
-    st.info(f"Distancia de plantación recomendada: ~{distancia:.2f} metros entre ejemplares.")
-    
-    st.write("**Nota Biológica:** La densidad se ajusta automáticamente para maximizar la supervivencia del *Pinus hartwegii* ante heladas y estrés hídrico.")
+    distancia = np.sqrt(10000 / n)
+    st.info(f"Distancia recomendada: ~{distancia:.2f} metros entre ejemplares.")
 else:
-    st.info("Ajuste los valores en la barra lateral y presione 'Ejecutar'.")
-
+    st.info("Configura los valores a la izquierda para iniciar la evolución genética.")
