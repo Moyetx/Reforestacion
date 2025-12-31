@@ -60,7 +60,7 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, sp_name):
     
     for _ in range(40):
         scores = np.array([fitness_function(n, temp, prec, alt, sp_data) for n in poblacion])
-        nueva_poblacion = # CORRECCIÓN: Inicialización de lista
+        nueva_poblacion = []
         
         # Elitismo
         nueva_poblacion.append(poblacion[np.argmax(scores)])
@@ -115,3 +115,4 @@ if run:
     st.info(f"Distancia recomendada: ~{distancia:.2f} metros entre ejemplares.")
 else:
     st.info("Configura los valores a la izquierda para iniciar la evolución genética.")
+
