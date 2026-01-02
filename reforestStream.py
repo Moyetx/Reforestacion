@@ -117,7 +117,7 @@ st.title("🌲 AI-Refores: Optimización de Reforestación")
 st.markdown("Determinación de densidad ideal para el **Suelo de Conservación (CDMX)**.")
 
 with st.sidebar:
-    st.header("📋 Selección de Especie")
+    st.header("Selección de Especie")
     # Selector por botones (sin teclado)
     sp_key = st.segmented_control(
         "Elige un Pino:", 
@@ -139,7 +139,7 @@ with st.sidebar:
     t_in = st.slider("Temp. Media Anual (°C)", 5, 25, 12)
     p_in = st.slider("Precipitación Anual (mm)", 400, 2000, 1100)
     slope_in = st.slider("Pendiente (%)", 0, 60, 10)
-    run_btn = st.button("🚀 Iniciar Optimización")
+    run_btn = st.button("Iniciar Optimización")
 
 if run_btn:
     n, t, m = ejecutar_ag(area_in, alt_in, t_in, p_in, slope_in, sp_key)
@@ -157,6 +157,7 @@ if run_btn:
     st.info(f"Distancia recomendada: ~{distancia:.2f} metros entre ejemplares.")
 else:
     st.info("Selecciona una especie y ajusta los parámetros para iniciar.")
+
 
 
 
