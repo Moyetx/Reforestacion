@@ -5,7 +5,7 @@ import os
 
 random.seed(42)
 # CONFIGURACIÓN DE PÁGINA streamlit
-st.set_page_config(page_title="AI-Refores CDMX", page_icon="🌲", layout="wide")
+st.set_page_config(page_title="AI-Refores CDMX", layout="wide")
 
 # Diccionarios de especies
 # Parámetros calibrados según silvicultura de precisión y Reineke 
@@ -130,7 +130,7 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
     return densidad_final, total_arboles, metodo
 
 # INTERFAZ STREAMLIT
-st.title("🌲 AI-Refores: Optimización de Reforestación")
+st.title(" AI-Refores: Optimización de Reforestación")
 st.markdown("Determinación de densidad ideal para el **Suelo de Conservación (CDMX)** basada en algoritmos genéticos.")
 
 with st.sidebar:
@@ -188,8 +188,9 @@ if boton_inicio:
     
     # 3. Recomendaciones Adicionales
     distancia_siembra = np.sqrt(10000 / densidad_optima)
-    st.info(f"📍 Distancia recomendada: ~{distancia_siembra:.2f} metros entre cada árbol.")
+    st.info(f"Distancia recomendada: ~{distancia_siembra:.2f} metros entre cada árbol.")
     st.write("**Nota Silvicultural:** El modelo ha ajustado la densidad para maximizar la supervivencia ante el Índice de Calor-Humedad (AHM) del sitio.")
 
 else:
     st.info("Ajusta los parámetros en la barra lateral y presiona el botón. Recuerda que puedes **escribir directamente los valores** para mayor precisión.")
+
