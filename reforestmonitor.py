@@ -90,13 +90,7 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
     tam_poblacion = 200 
     poblacion = np.random.uniform(400, 2500, tam_poblacion)
     #prob_mutacion = 0.2
-    if i < 10:
-        prob_mutacion = 0.35
-    elif i < 30:
-        prob_mutacion = 0.2
-    else:
-        prob_mutacion = 0.1
-
+    
     
     # VARIABLES PARA MONITOREO
     historial_logs = []       # Guardará el texto de "Generación X..."
@@ -105,7 +99,12 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
     generacion_convergencia = 0
     
     for i in range(50):
-        #prob_mutacion = 0.35 if i < 10 else 0.15
+    if i < 10:
+            prob_mutacion = 0.35
+    elif i < 30:
+            prob_mutacion = 0.2
+    else:
+            prob_mutacion = 0.1
 
         puntajes = np.array([calcular_aptitud(n, temp, prec, alt, datos_especie) for n in poblacion])
         
