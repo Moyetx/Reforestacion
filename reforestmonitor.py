@@ -89,8 +89,13 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
     datos_especie = ESPECIES[clave_especie]
     tam_poblacion = 200 
     poblacion = np.random.uniform(400, 2500, tam_poblacion)
-    prob_mutacion = 0.2
-    #prob_mutacion = 0.35 if i < 10 else 0.15
+    #prob_mutacion = 0.2
+    if i < 10:
+        prob_mutacion = 0.35
+    elif i < 30:
+        prob_mutacion = 0.2
+    else:
+        prob_mutacion = 0.1
 
     
     # VARIABLES PARA MONITOREO
