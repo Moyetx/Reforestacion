@@ -97,7 +97,9 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
     mejor_fitness_historico = -1
     generacion_convergencia = 0
     
-    for i in range(50): 
+    for i in range(50):
+        prob_mutacion = 0.35 if i < 10 else 0.15
+
         puntajes = np.array([calcular_aptitud(n, temp, prec, alt, datos_especie) for n in poblacion])
         
         # --- LÓGICA DE REPORTE Y CONVERGENCIA ---
