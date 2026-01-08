@@ -87,7 +87,7 @@ def seleccion_ruleta_manual(poblacion, puntajes):
 
 def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
     datos_especie = ESPECIES[clave_especie]
-    tam_poblacion = 150 
+    tam_poblacion = 200 
     poblacion = np.random.uniform(400, 2500, tam_poblacion)
     prob_mutacion = 0.2
     #prob_mutacion = 0.35 if i < 10 else 0.15
@@ -104,7 +104,7 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
 
         puntajes = np.array([calcular_aptitud(n, temp, prec, alt, datos_especie) for n in poblacion])
         
-        # --- LÓGICA DE REPORTE Y CONVERGENCIA ---
+        # registros
         mejor_idx_actual = np.argmax(puntajes)
         mejor_fitness_actual = puntajes[mejor_idx_actual]
         mejor_individuo_actual = poblacion[mejor_idx_actual]
