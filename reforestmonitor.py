@@ -88,7 +88,7 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
     tam_poblacion = 150 
     poblacion = np.random.uniform(400, 2500, tam_poblacion)
     #prob_mutacion = 0.2
-    prob_mutacion = 0.35 if i < 10 else 0.15
+    #prob_mutacion = 0.35 if i < 10 else 0.15
 
     
     # VARIABLES PARA MONITOREO
