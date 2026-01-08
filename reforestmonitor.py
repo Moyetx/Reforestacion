@@ -4,7 +4,6 @@ import random
 import os
 import pandas as pd # Agregamos pandas para la gráfica fácil
 
-random.seed(42)
 
 # CONFIGURACIÓN DE PÁGINA streamlit
 st.set_page_config(page_title="AI-Refores CDMX", layout="wide")
@@ -86,11 +85,11 @@ def seleccion_ruleta_manual(poblacion, puntajes):
 
 def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
     datos_especie = ESPECIES[clave_especie]
-    tam_poblacion = 100 
-    poblacion = np.random.uniform(400, 2500, tam_poblacion)
-    prob_mutacion = 0.1 
+    tam_poblacion = 250 
+    poblacion = np.random.uniform(10, 150, tam_poblacion)
+    prob_mutacion = 0.2 
     
-    # --- NUEVAS VARIABLES PARA MONITOREO ---
+    # VARIABLES PARA MONITOREO
     historial_logs = []       # Guardará el texto de "Generación X..."
     historial_fitness = []    # Guardará solo los números para la gráfica
     mejor_fitness_historico = -1
