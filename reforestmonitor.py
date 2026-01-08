@@ -120,8 +120,7 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
         log = f"Gen {i+1}: Mejor Indiv = {mejor_individuo_actual:.2f} arb/ha | Fitness = {mejor_fitness_actual:.4f}"
         historial_logs.append(log)
         
-        # Detectar convergencia (¿Cuándo encontramos este valor óptimo por primera vez?)
-        # Como usamos elitismo, el fitness nunca baja. Si sube, actualizamos la generación de convergencia.
+        # Detectar convergencia 
         if mejor_fitness_actual > mejor_fitness_historico:
             mejor_fitness_historico = mejor_fitness_actual
             generacion_convergencia = i + 1
@@ -137,7 +136,7 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
             
             hijo = (padre1 + padre2) / 2
             
-            if random.random() < prob_mutacion:
+            if random.uniform(0,1) < prob_mutacion:
                 hijo = hijo * random.uniform(0.95, 1.05) 
                 
             nueva_poblacion.append(hijo)
