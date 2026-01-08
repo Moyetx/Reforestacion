@@ -85,8 +85,8 @@ def seleccion_ruleta_manual(poblacion, puntajes):
 
 def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
     datos_especie = ESPECIES[clave_especie]
-    tam_poblacion = 250 
-    poblacion = np.random.uniform(10, 150, tam_poblacion)
+    tam_poblacion = 150 
+    poblacion = np.random.uniform(400, 2500, tam_poblacion)
     prob_mutacion = 0.2 
     
     # VARIABLES PARA MONITOREO
@@ -95,7 +95,7 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
     mejor_fitness_historico = -1
     generacion_convergencia = 0
     
-    for i in range(40): 
+    for i in range(50): 
         puntajes = np.array([calcular_aptitud(n, temp, prec, alt, datos_especie) for n in poblacion])
         
         # --- LÓGICA DE REPORTE Y CONVERGENCIA ---
