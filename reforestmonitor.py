@@ -52,7 +52,9 @@ def calcular_aptitud(N, temp, prec, altitud, datos_especie):
     dr = N / idr_max  
     
     if 0.35 <= dr <= 0.65:
-        puntaje = 100 
+        #puntaje = 100
+        puntaje = 100 * np.exp(-((dr - 0.5) ** 2) / 0.01)
+
     elif dr < 0.35:
         puntaje = 100 * (dr / 0.35) 
     else:
