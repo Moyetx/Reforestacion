@@ -99,12 +99,12 @@ def ejecutar_ag(area_ha, alt, temp, prec, pendiente, clave_especie):
     generacion_convergencia = 0
     
     for i in range(50):
-    if i < 10:
-            prob_mutacion = 0.35
-    elif i < 30:
-            prob_mutacion = 0.2
-    else:
-            prob_mutacion = 0.1
+        if i < 10:
+                prob_mutacion = 0.35
+        elif i < 30:
+                prob_mutacion = 0.2
+        else:
+                prob_mutacion = 0.1
 
         puntajes = np.array([calcular_aptitud(n, temp, prec, alt, datos_especie) for n in poblacion])
         
